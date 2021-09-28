@@ -79,7 +79,7 @@ dom(home1)
 
 
 #Рисуем солнце
-sun = [yellow, 500,150, 50]
+sun = [yellow, 730,120, 50]
 def solnce(sun):
         fi = 0
         color, x,y, rad = sun
