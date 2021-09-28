@@ -16,7 +16,7 @@ blue = (0,0,255)
 brown = (100,100,100)
 yellow = (255,255,0)
 darkblue = (50,50,255)
-
+red = (255,0,0)
 
 
 #Рисуем дерево
@@ -37,16 +37,22 @@ derevo(tree,60,30)
 #Рисуем облако
 cloud = [7,white ,50,100,100]
 def oblaka(cloud,dx,dy):
-    number, color, rad,x,y = cloud
-    for k in range(number):
-            circle(screen, color, (x,y),rad)
-            circle(screen, (0,0,0), (x,y),rad,2)
-            y = y + dy*((-1)**k)
-            x = x + dx*(1+(-1)**(k+1))
+      number, color, rad,x,y = cloud
+      for k in range(number):
+        circle(screen, color, (x,y),rad)
+        circle(screen, (0,0,0), (x,y),rad,2)
+        y = y + dy*((-1)**k)
+        x = x + dx*(1+(-1)**(k+1))
 oblaka(cloud,30,60)
 
 #Рисуем дом
-
+home = [brown,red,darkblue,200, 500,175]
+def dom(home):
+        color1, color2, color3, x, y, size = home
+        polygon(screen,color1,[(x,y),(x-size,y),(x-size,y-size),(x,y-size)])
+        polygon(screen, color2,[(x,y-size),(x-size/2,y-3*size/2),(x-size,y-size)])
+dom(home)
+        
 
 
 pygame.display.update()
