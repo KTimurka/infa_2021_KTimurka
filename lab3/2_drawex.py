@@ -1,6 +1,6 @@
 import pygame
 from pygame.draw import *
-
+import math
 pygame.init()
 
 FPS = 30
@@ -50,9 +50,32 @@ home = [brown,red,darkblue,200, 500,175]
 def dom(home):
         color1, color2, color3, x, y, size = home
         polygon(screen,color1,[(x,y),(x-size,y),(x-size,y-size),(x,y-size)])
+        polygon(screen,black,[(x,y),(x-size,y),(x-size,y-size),(x,y-size)],2)
+        polygon(screen, color3,[(x-size/4,y-size/4),(x-3*size/4,y-size/4),(x-3*size/4,y-3*size/4),(x-size/4,y-3*size/4)])
+        polygon(screen, black,[(x-size/4,y-size/4),(x-3*size/4,y-size/4),(x-3*size/4,y-3*size/4),(x-size/4,y-3*size/4)],2)
         polygon(screen, color2,[(x,y-size),(x-size/2,y-3*size/2),(x-size,y-size)])
+        polygon(screen, black,[(x,y-size),(x-size/2,y-3*size/2),(x-size,y-size)],2)
 dom(home)
-        
+
+
+
+#Рисуем солнце
+sun = [yellow, 500,150, 50]
+def solnce(sun):
+        fi = 0
+        color, x,y, rad = sun
+        dx = 0
+        dy = 0
+        for i in range(20):
+                x1=x-rad*math.sin(fi)
+                y1=y-rad+rad*math.cos(fi)
+                x2=x-rad*math.cos(fi+3.14/6)
+                y2=y-rad - rad*math.sin(fi+3.14/6)
+                x3=x-rad*math.cos(fi+5*3.14/6)
+                y3=y-rad - rad*math.sin(fi+5*3.14/6)
+                polygon(screen,color,[(x1,y1),(x2,y2),(x3,y3)])
+                fi+=3.14/10
+solnce(sun)
 
 
 pygame.display.update()
