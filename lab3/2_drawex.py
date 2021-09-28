@@ -12,6 +12,7 @@ screen = pygame.display.set_mode((800,600))
 black = (0,0,0)
 white = (255,255,255)
 green = (0,255,0)
+darkgreen=(0,151,0)
 blue = (0,0,255)
 brown = (100,100,100)
 yellow = (255,255,0)
@@ -27,7 +28,7 @@ polygon(screen,green,[(0,300),(800,300),(800,600),(0,600)])
 
 
 #Рисуем дерево
-tree = [6, green, 50, 600, 200]
+tree = [6, darkgreen, 50, 600, 200]
 def derevo(tree,dx,dy):
     number, color, rad, x,y = tree
     polygon(screen,brown,[(x+10,y+90),(x+10,y+300),(x-10,y+300),(x-10,y+90)])
