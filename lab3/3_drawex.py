@@ -44,7 +44,7 @@ oblaka(cloud2,12,24,20)
 
 
 #Рисуем дерево
-tree = [6, darkgreen, 600, 200]
+tree = [6, darkgreen, 700, 200]
 tree1= [6, darkgreen, 450, 250]
 tree2= [6, darkgreen, 350, 170]
 def derevo(tree,dx,dy,rad):
@@ -64,6 +64,7 @@ derevo(tree2,36,18,30)
 
 #Рисуем дом
 home = [brown,red,darkblue,200, 500,175]
+home1 = [brown,red,darkblue,600, 400,100]
 def dom(home):
         color1, color2, color3, x, y, size = home
         polygon(screen,color1,[(x,y),(x-size,y),(x-size,y-size),(x,y-size)])
@@ -73,6 +74,7 @@ def dom(home):
         polygon(screen, color2,[(x,y-size),(x-size/2,y-3*size/2),(x-size,y-size)])
         polygon(screen, black,[(x,y-size),(x-size/2,y-3*size/2),(x-size,y-size)],2)
 dom(home)
+dom(home1)
 
 
 
