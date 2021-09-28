@@ -27,6 +27,22 @@ polygon(screen,green,[(0,300),(800,300),(800,600),(0,600)])
 
 
 
+#Рисуем облако
+cloud = [7,white ,100,100]
+cloud1 = [7,white ,350,130]
+cloud2 = [7,white ,550,50]
+def oblaka(cloud,dx,dy,rad):
+      number, color,x,y = cloud
+      for k in range(number):
+        circle(screen, color, (x,y),rad)
+        y = y + dy*((-1)**k)
+        x = x + dx*(1+(-1)**(k+1))
+oblaka(cloud,24,48,40)
+oblaka(cloud1,18,36,30)
+oblaka(cloud2,12,24,20)
+
+
+
 #Рисуем дерево
 tree = [6, darkgreen, 600, 200]
 tree1= [6, darkgreen, 450, 250]
@@ -45,16 +61,6 @@ derevo(tree,48,24,40)
 derevo(tree1,24,12,20)
 derevo(tree2,36,18,30)
         
-#Рисуем облако
-cloud = [7,white ,50,100,100]
-def oblaka(cloud,dx,dy):
-      number, color, rad,x,y = cloud
-      for k in range(number):
-        circle(screen, color, (x,y),rad)
-        circle(screen, (0,0,0), (x,y),rad,2)
-        y = y + dy*((-1)**k)
-        x = x + dx*(1+(-1)**(k+1))
-oblaka(cloud,30,60)
 
 #Рисуем дом
 home = [brown,red,darkblue,200, 500,175]
