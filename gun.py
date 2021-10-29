@@ -31,7 +31,7 @@ class Ball:
         self.screen = screen
         self.x = 40
         self.y = 450
-        self.r = 10
+        self.r = 0
         self.vx = 0
         self.vy = 0
         self.color = choice(GAME_COLORS)
@@ -84,6 +84,21 @@ class Ball:
         else:
             return False
 
+class Explorer(Ball):
+    def __init__(self):
+        Ball.__init__(self,screen)
+    def explosion(self):
+        x = self.x
+        y = self.y
+        balls.remove(b)
+        for i in range(100):
+            new_ball = Ball(self.screen)
+            new_ball.r += 2
+            new_ball.x = x
+            new_ball.y = y
+            new_ball.vx = random.randint(-15,15)
+            new_ball.vy = random.randint(-55,15)
+            balls.append(new_ball)
 
 
 
@@ -99,7 +114,7 @@ class Gun:
     def fire2_start(self, event):
         self.f2_on = 1
 
-    def fire2_end(self, event):
+    def fire2_end(self, event, gun_type):
         """Выстрел мячом.
 
         Происходит при отпускании кнопки мыши.
@@ -107,8 +122,11 @@ class Gun:
         """
         global balls, count
         count += 1
-        new_ball = Ball(self.screen)
-        new_ball.r += 5
+        if gun_type:
+            new_ball = Explorer()
+        else:
+            new_ball = Ball(self.screen)
+        new_ball.r += 15
         new_ball.x += self.x - 20
         self.an = math.atan2((event.pos[1]-new_ball.y), (event.pos[0]-new_ball.x))
         new_ball.vx = self.f2_power * math.cos(self.an)
@@ -224,6 +242,7 @@ for i in range(2):
 finished = False
 stop = 0
 score = 0
+gun_type = False
 
 while not finished:
     screen.fill(WHITE)
@@ -257,10 +276,16 @@ while not finished:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             gun.fire2_start(event)
         elif event.type == pygame.MOUSEBUTTONUP:
-            gun.fire2_end(event)
+            gun.fire2_end(event, gun_type)
         elif event.type == pygame.MOUSEMOTION:
             gun.targetting(event)
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                gun_type = not(gun_type)
+    # отрисовка шариков с проверкой на тип (взрывание подрывников)
     for b in balls:
+        if type(b)==Explorer and b.time == 30:
+            b.explosion()
         b.move()
         for target in pool:
             if b.hittest(target) and target.live:
@@ -271,3 +296,4 @@ while not finished:
 
 pygame.quit()
 print(score)
+print(gun_type)
