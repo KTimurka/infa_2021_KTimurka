@@ -21,7 +21,7 @@ HEIGHT = 600
 
 
 class Ball:
-    def __init__(self, screen: pygame.Surface, x=40, y=450):
+    def __init__(self, screen: pygame.Surface):
         """ Конструктор класса ball
 
         Args:
@@ -29,8 +29,8 @@ class Ball:
         y - начальное положение мяча по вертикали
         """
         self.screen = screen
-        self.x = x
-        self.y = y
+        self.x = 40
+        self.y = 450
         self.r = 10
         self.vx = 0
         self.vy = 0
@@ -45,7 +45,6 @@ class Ball:
         self.x и self.y с учетом скоростей self.vx и self.vy, силы гравитации, действующей на мяч,
         и стен по краям окна (размер окна 800х600).
         """
-        # FIXME
         self.x += self.vx
         self.y -= self.vy
         if self.x > 780:
@@ -77,7 +76,6 @@ class Ball:
         Returns:
             Возвращает True в случае столкновения мяча и цели. В противном случае возвращает False.
         """
-        # FIXME
         x0 = obj.x
         y0 = obj.y
         distance = (self.x - x0)**2 + (self.y - y0)**2
@@ -87,6 +85,8 @@ class Ball:
             return False
 
 
+
+
 class Gun:
     def __init__(self, screen):
         self.screen = screen
@@ -94,6 +94,7 @@ class Gun:
         self.f2_on = 0
         self.an = 1
         self.color = GREY
+        self.x = 30
 
     def fire2_start(self, event):
         self.f2_on = 1
@@ -108,6 +109,7 @@ class Gun:
         count += 1
         new_ball = Ball(self.screen)
         new_ball.r += 5
+        new_ball.x += self.x - 20
         self.an = math.atan2((event.pos[1]-new_ball.y), (event.pos[0]-new_ball.x))
         new_ball.vx = self.f2_power * math.cos(self.an)
         new_ball.vy = - self.f2_power * math.sin(self.an)
@@ -118,24 +120,23 @@ class Gun:
     def targetting(self, event):
         """Прицеливание. Зависит от положения мыши."""
         if event:
-            self.an = math.atan((event.pos[1]-450) / (event.pos[0]-20))
+            self.an = math.atan((event.pos[1]-450) / (event.pos[0]-self.x))
         if self.f2_on:
             self.color = RED
         else:
             self.color = GREY
 
     def draw(self):
-        # FIXIT don't know how to do it
-        newx1 = 20 + 1.5*self.f2_power*math.cos(self.an)
+        newx1 = self.x + 1.5*self.f2_power*math.cos(self.an)
         newy1 = 450 + 1.5*self.f2_power*math.sin(self.an)
         newx2 = newx1 - 10*math.sin(self.an)
         newy2 = newy1 + 10*math.cos(self.an)
-        newx3 = 20 - 10*math.sin(self.an)
+        newx3 = self.x - 10*math.sin(self.an)
         newy3 = 450 + 10*math.cos(self.an)
         pygame.draw.polygon(
             self.screen,
             self.color,
-            [(newx1,newy1),(newx2,newy2),(newx3,newy3),(20,450)]
+            [(newx1,newy1),(newx2,newy2),(newx3,newy3),(self.x,450)]
         )
 
     def power_up(self):
@@ -146,11 +147,25 @@ class Gun:
         else:
             self.color = GREY
 
+class Tank:
+    def __init__(self):
+        self.screen = screen
+        self.x = 20
+        self.y = 450
+        self.vx = 0.5
+        self.color = GREY
+    def move(self):
+        if self.x + self.vx < 200 and self.x + self.vx > 0:
+            self.x += self.vx
+            gun.x +=self.vx
+    def draw(self):
+        pygame.draw.rect(
+            self.screen,
+            self.color,(self.x,self.y, 40,20)
+        )
+
 
 class Target:
-    # self.points = 0
-    # FIXME: don't work!!! How to call this functions when object is created?
-    # self.new_target()
     def __init__(self):
         self.screen = screen
         self.x = random.randint(600, 780)
@@ -201,6 +216,8 @@ pool = []
 
 clock = pygame.time.Clock()
 gun = Gun(screen)
+tank = Tank()
+# создание массива из целей
 for i in range(2):
     target = Target()
     pool.append(target)
@@ -210,10 +227,17 @@ score = 0
 
 while not finished:
     screen.fill(WHITE)
+    if pygame.key.get_pressed()[pygame.K_LEFT]:
+        tank.vx=-1
+        tank.move()
+    elif pygame.key.get_pressed()[pygame.K_RIGHT]:
+        tank.vx=1
+        tank.move()
+    tank.draw()
     gun.draw()
+    # сдвиг и отрисовка целей. В случае попадания, откат до появления новой
     for target in pool:
         target.move()
-    for target in pool:
         target.draw()
         if target.live == 0:
             stop +=1
