@@ -183,6 +183,7 @@ class Tank:
         )
 
 
+
 class Target:
     def __init__(self):
         self.screen = screen
@@ -191,37 +192,55 @@ class Target:
         self.r = random.randint(20, 50)
         self.color = RED
         self.vy = random.randint(1, 10)
+        self.target_type = random.randint(0, 5)
         self.live = 1
+        self.x0 = self.x
         self.points = 0
 
     def new_target(self):
         """ Инициализация новой цели. """
-        self.x = random.randint(600, 780)
+        self.x = random.randint(600, 700)
         self.y = random.randint(150, 550)
         self.r = random.randint(10, 50)
         self.vy = random.randint(1,10)
+        self.target_type = random.randint(0,1)
         self.color = RED
+        self.x0 = self.x
 
     def move (self):
-        self.y +=self.vy
-        if self.y > 550:
-            self.vy = -self.vy
-        if self.y < 50:
-            self.vy = -self.vy
+        if self.target_type > 0:
+            self.y +=self.vy
+            if self.y > 550:
+                self.vy = -self.vy
+            if self.y < 50:
+                self.vy = -self.vy
+        else:
+            self.x =self.x0 + 50*math.cos(6.28*(self.y)/200)
+            self.y += self.vy
+            if self.y > 550:
+                self.vy = -self.vy
+            if self.y < 50:
+                self.vy = -self.vy
 
     def draw(self):
         if self.live==1:
-            pygame.draw.circle(
-                self.screen,
-                self.color,
-                (self.x, self.y),
-                self.r
-            )
+            if self.target_type == 0:
+                pygame.draw.rect(
+                    self.screen,
+                    self.color,
+                    (self.x-self.r/2, self.y-self.r/2, self.r, self.r), 4
+                )
+            else:
+                pygame.draw.circle(
+                    self.screen,
+                    self.color,
+                    (self.x, self.y),
+                    self.r
+                )
         else:
             text = font.render("Вы попали по шарику. Затраченное число попыток: " + str(count), True, (0, 0, 0))
             screen.blit(text, [100, 250])
             pygame.display.update()
-
 
 pygame.init()
 
